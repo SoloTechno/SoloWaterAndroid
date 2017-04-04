@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.gatech.edu.soloTechno.m4_login.R;
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -45,32 +47,47 @@ public class ShowGraph extends FragmentActivity {
                     determineSelection(HistoricalReportActivity.data2));
             plot(determineSelection(HistoricalReportActivity.data1),
                     determineSelection(HistoricalReportActivity.data3));
+
+           graph.getGridLabelRenderer().setHorizontalAxisTitle(HistoricalReportActivity.data1);
+           graph.getGridLabelRenderer().setVerticalAxisTitle(HistoricalReportActivity.data2);
+
+
+
+
         } else if(HistoricalReportActivity.data1!=null && HistoricalReportActivity.data2!=null) {
                plot(determineSelection(HistoricalReportActivity.data1),
                        determineSelection(HistoricalReportActivity.data2));
 
+           graph.getGridLabelRenderer().setHorizontalAxisTitle(HistoricalReportActivity.data1);
+           graph.getGridLabelRenderer().setVerticalAxisTitle(HistoricalReportActivity.data2);
+
+
         } else if(HistoricalReportActivity.data2!=null && HistoricalReportActivity.data3!=null) {
                 plot(determineSelection(HistoricalReportActivity.data2),
                         determineSelection(HistoricalReportActivity.data3));
+
+           graph.getGridLabelRenderer().setHorizontalAxisTitle(HistoricalReportActivity.data2);
+           graph.getGridLabelRenderer().setVerticalAxisTitle(HistoricalReportActivity.data3);
+
+
+
         } else if(HistoricalReportActivity.data1!=null && HistoricalReportActivity.data3!=null){
                 plot(determineSelection(HistoricalReportActivity.data1),
                         determineSelection(HistoricalReportActivity.data3));
+
+           graph.getGridLabelRenderer().setHorizontalAxisTitle(HistoricalReportActivity.data1);
+           graph.getGridLabelRenderer().setVerticalAxisTitle(HistoricalReportActivity.data3);
+
+
         }
     }
 
     void plot (ArrayList list1, ArrayList list2) {
         series = new LineGraphSeries<>();
-       // int i = 0;
-       // int length = list1.size();
-        for(int i = 0; i< 5; i++) {
-            //series.appendData(new DataPoint((Double) list1.get(i), (Double) list2.get(i)), true, length);
-           /* series.appendData(new DataPoint(0, 1), true, 5);
-            series.appendData(new DataPoint(1, 5), true, 5);
-            series.appendData(new DataPoint(2, 3), true, 5);
-            series.appendData(new DataPoint(3, 2), true, 5);
-            series.appendData(new DataPoint(4, 6), true, 5);*/
-            series.appendData(new DataPoint(i++, i++), true, 5);
 
+       int length = list1.size();
+        for(int i = 0; i< length; i++) {
+            series.appendData(new DataPoint(i, Double.parseDouble((String)list2.get(i))), true, length*2);
        }
         graph.addSeries(series);
     }
