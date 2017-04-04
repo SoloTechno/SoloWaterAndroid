@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        accountType = accountType == null ? "User" : accountType;
+        //accountType = accountType == null ? "User" : accountType;
         initMap();
     }
 

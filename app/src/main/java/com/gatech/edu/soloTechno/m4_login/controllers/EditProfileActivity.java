@@ -112,6 +112,12 @@ public class EditProfileActivity extends AppCompatActivity {
                     confirmPassword_text.setText(user.password);
                 Random rand = new Random();
                 accountTypeSpinner.setSelection(rand.nextInt(4));
+              /*  switch (user.getAccountType()) {
+                    case "Manager": accountTypeSpinner.setSelection(1);
+                        break;
+                    case "Worker": accountTypeSpinner.setSelection(2);
+                }*/
+
 
             }
 
