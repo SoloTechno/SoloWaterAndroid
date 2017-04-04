@@ -48,16 +48,22 @@ public class WaterPurityReportData {
      * @return string of text
      */
     public String getReport(){
-        String list = "Water Report Number : " + waterReportNumber
-                + "\nName : " + name
-                + "\nLocation Name : " + locationName
-                + "\nLatitude : " + latitude
-                + "\nLongitude : " + longitude
-                + "\nWater Condition : " + waterCondition
-                + "\nVirus PPM : " + virusPPM
-                + "\nContaminant PPM : " + contaminantPPM
-                + "\nYear : " + year
-                + "\nMonth : " + month;
+        String list;
+
+        if(waterReportNumber != null) {
+            list = "Water Report Number : " + waterReportNumber
+                    + "\nName : " + name
+                    + "\nLocation Name : " + locationName
+                    + "\nLatitude : " + latitude
+                    + "\nLongitude : " + longitude
+                    + "\nWater Condition : " + waterCondition
+                    + "\nVirus PPM : " + virusPPM
+                    + "\nContaminant PPM : " + contaminantPPM
+                    + "\nYear : " + year
+                    + "\nMonth : " + month;
+        } else{
+            list = "There are no reports to fetch.";
+        }
         return list;
     }
 }
