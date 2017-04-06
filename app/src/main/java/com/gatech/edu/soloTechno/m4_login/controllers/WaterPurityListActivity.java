@@ -13,8 +13,6 @@ import com.gatech.edu.soloTechno.m4_login.model.WaterPurityReportData;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,14 +21,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class WaterPurityListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private List<WaterPurityReportData> purityList = new ArrayList<WaterPurityReportData>();
+    private final List<WaterPurityReportData> purityList = new ArrayList<>();
 
-    private DatabaseReference mFirebaseDatabase;
-    private Map purityReportMap;
     private Map singleUser = null;
 
     @Override
@@ -44,7 +41,7 @@ public class WaterPurityListActivity extends AppCompatActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new WaterPurityListAdapter(getBaseContext(), purityList);
+        mAdapter = new WaterPurityListAdapter(purityList);
         mRecyclerView.setAdapter(mAdapter);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("water purity reports");
@@ -53,6 +50,7 @@ public class WaterPurityListActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
+                    @SuppressWarnings("unchecked")
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Gets information from database using Map
                         for (Map.Entry<String, Object> entry : ((Map<String, Object>) dataSnapshot.getValue()).entrySet()){

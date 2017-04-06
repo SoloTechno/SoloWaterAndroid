@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -23,7 +22,6 @@ import com.gatech.edu.soloTechno.m4_login.R;
 import com.gatech.edu.soloTechno.m4_login.model.DatePickerFragment;
 import com.gatech.edu.soloTechno.m4_login.model.TimePickerFragment;
 import com.gatech.edu.soloTechno.m4_login.model.WaterPurityReportData;
-import com.gatech.edu.soloTechno.m4_login.model.WaterSourceReportData;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
@@ -36,14 +34,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 
+@SuppressWarnings("FieldCanBeLocal")
 public class WaterPurityReportActivity extends FragmentActivity {
     // private field to get the location's name
     private CharSequence locationName;
@@ -58,9 +55,8 @@ public class WaterPurityReportActivity extends FragmentActivity {
     // private field to get the longitude and latitude of location
     private LatLng locationLatLng;
     private FirebaseAuth mAuth;
-    private static int mutator;
+    private static int counter;
     private String s = "";
-    MainActivity main = new MainActivity();
     private String year;
     private String month;
 
@@ -70,7 +66,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         // Water report initialization
-        waterPurityLogger = new ArrayList<String>();
+        waterPurityLogger = new ArrayList<>();
         loadArray(getApplicationContext());
 
         super.onCreate(savedInstanceState);
@@ -86,7 +82,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
         final Random rand = new Random();
         waterReportNumber = (EditText) findViewById(R.id.water_report_number);
         waterReportNumber.setEnabled(false);
-        // ramdom number range from 1 to 1000
+        // random number range from 1 to 1000
         waterReportNumber.setText(Integer.toString(rand.nextInt(1000) + 1));
 
         // water condition spinners
@@ -131,22 +127,23 @@ public class WaterPurityReportActivity extends FragmentActivity {
                 new ValueEventListener() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
+                    @SuppressWarnings("unchecked")
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
                         for (Map.Entry<String, Object> entry : ((Map<String,Object>) dataSnapshot.getValue()).entrySet()) {
                             //Get user map
                             Map singleUser = (Map) entry.getValue();
-                            s  = s + ((String) singleUser.get("locationName"))
+                            s  = s + singleUser.get("locationName")
                                     + " submitted by "
-                                    + ((String) singleUser.get("name"))
+                                    + singleUser.get("name")
                                     + " of "
-                                    + ((String) singleUser.get("waterPurityCondition"))
+                                    + singleUser.get("waterPurityCondition")
                                     + ". Report number: "
-                                    + ((String) singleUser.get("virusPPM"))
-                                    + ((String) singleUser.get("contaminantPPM"))
-                                    + ((String) singleUser.get("waterReportNumber"))
-                                    + ((String) singleUser.get("year"))
-                                    + ((String) singleUser.get("month"))
+                                    + singleUser.get("virusPPM")
+                                    + singleUser.get("contaminantPPM")
+                                    + singleUser.get("waterReportNumber")
+                                    + singleUser.get("year")
+                                    + singleUser.get("month")
                                     + System.lineSeparator()
                                     + System.lineSeparator()
                                     + System.lineSeparator();
@@ -182,14 +179,16 @@ public class WaterPurityReportActivity extends FragmentActivity {
                 wReport.put("month", month);
                 // myFirebaseRef.push().setValue(wReport);
 
-                String userId = mAuth.getCurrentUser().getUid() + mutator++;
+                if (mAuth.getCurrentUser() != null) {
+                    String userId = mAuth.getCurrentUser().getUid() + counter++;
+                    WaterPurityReportData waterSourceReportData = new WaterPurityReportData( waterReportNumber.getText().toString(),
+                            name.getText().toString(), locationName.toString(), String.valueOf(locationLatLng.latitude),
+                            String.valueOf(locationLatLng.longitude), waterConditionSpinner.getSelectedItem().toString(),
+                            virusPPM.getText().toString(), contaminantPPM.getText().toString(), year, month);
+                    myFirebaseRef.child(userId).setValue(waterSourceReportData);
+                }
 
-                WaterPurityReportData waterSourceReportData = new WaterPurityReportData( waterReportNumber.getText().toString(),
-                        name.getText().toString(), locationName.toString(), String.valueOf(locationLatLng.latitude),
-                        String.valueOf(locationLatLng.longitude), waterConditionSpinner.getSelectedItem().toString(),
-                        virusPPM.getText().toString(), contaminantPPM.getText().toString(), year, month);
 
-                myFirebaseRef.child(userId).setValue(waterSourceReportData);
 
                 // shows a brief outline of the report that the user just submitted
                 waterPurityLogger.add("waterReportNumber: " + wReport.get("waterReportNumber") + " Name: "
@@ -206,7 +205,6 @@ public class WaterPurityReportActivity extends FragmentActivity {
                     public void run() {
 
                         if (!isFinishing()){
-                            String st = "";
                             new AlertDialog.Builder(WaterPurityReportActivity.this)
                                     .setTitle("Success")
                                     .setMessage("Currently saved reports are: " + s)
@@ -238,17 +236,15 @@ public class WaterPurityReportActivity extends FragmentActivity {
     *
     * @Param v View for date picker
     * */
-    public void showDatePickerDialog(View v) {
+    public void showDatePickerDialog() {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     /*
     * Displays time range for user input
-    *
-    * @Param v View for date picker
     * */
-    public void showTimePickerDialog(View v) {
+    public void showTimePickerDialog() {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
@@ -256,9 +252,8 @@ public class WaterPurityReportActivity extends FragmentActivity {
     /**
      * Hack to save the array in app
      * this ensures that my view reports always work
-     * @return if the array was saved or not
      */
-    public boolean saveArray()
+    private void saveArray()
     {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         SharedPreferences.Editor mEdit1 = sp.edit();
@@ -270,8 +265,6 @@ public class WaterPurityReportActivity extends FragmentActivity {
             mEdit1.remove("Status_" + i);
             mEdit1.putString("Status_" + i, waterPurityLogger.get(i));
         }
-
-        return mEdit1.commit();
     }
 
     /**
@@ -279,7 +272,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
      * @param mContext the context of this app
      * final state ensures that waterPurityLogger is perfect
      */
-    public static void loadArray(Context mContext)
+    private static void loadArray(Context mContext)
     {
         SharedPreferences mSharedPreference1 =   PreferenceManager.getDefaultSharedPreferences(mContext);
         waterPurityLogger.clear();

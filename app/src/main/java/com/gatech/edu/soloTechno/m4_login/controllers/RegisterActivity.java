@@ -23,22 +23,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static android.R.string.cancel;
-
-
-/**
- * Created by timothybaba on 2/19/17.
- */
-
+@SuppressWarnings("FieldCanBeLocal")
 public class RegisterActivity extends AppCompatActivity {
 
     /* ************************
@@ -65,14 +56,12 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean validPassword;
     private boolean validFirstName;
     private boolean validLastName;
-    private boolean edit = false;
 
     // firebase
 
-    private FirebaseUser mFirebaseUser;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    static FirebaseAuth mAuth;
-    public static final String TAG = RegisterActivity.class.getSimpleName();
+    private static FirebaseAuth mAuth;
+    private static final String TAG = RegisterActivity.class.getSimpleName();
     private ProgressDialog mAuthProgressDialog;
 
     private DatabaseReference mFirebaseDatabase;
@@ -80,7 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private String userId;
 
-    public static List<String> accounts = Arrays.asList("Manager", "Worker", "Admin", "User");
+    private static final List<String> accounts = Arrays.asList("Manager", "Worker", "Admin", "User");
 
 
     @Override
@@ -181,7 +170,6 @@ public class RegisterActivity extends AppCompatActivity {
                                         email_text.setError("Try with another email account");
                                         View focusView = email_text;
                                         focusView.requestFocus();
-                                        return;
                                     } else {
                                         Log.d(TAG, "Authentication successful");
 
@@ -200,6 +188,7 @@ public class RegisterActivity extends AppCompatActivity {
         /**
          * set up adapter to display the account types in the spinner
          */
+        @SuppressWarnings("unchecked")
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountTypeSpinner.setAdapter(adapter);
@@ -235,9 +224,8 @@ public class RegisterActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Log in failed." + task.getException(),
-                                    Toast.LENGTH_SHORT).show();
-
+                                Toast.makeText(RegisterActivity.this, "Log in failed.",
+                                        Toast.LENGTH_SHORT).show();
                         } else {
 
                             Log.d(TAG, "Authentication successful");
@@ -309,7 +297,7 @@ public class RegisterActivity extends AppCompatActivity {
             email_text.setError("Please enter a valid email address");
             return false;
         }
-        return isGoodEmail;
+        return true;
     }
 
     /**
@@ -332,7 +320,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Confirms that an entered password is atleast 6 characters long, and ensures the password and
+     * Confirms that an entered password is at least 6 characters long, and ensures the password and
      * the password confirmation fields match. if not the case, it displays an error  int the
      * password_text
      * @param password password entered in the password field
@@ -380,9 +368,11 @@ public class RegisterActivity extends AppCompatActivity {
         // get reference to 'users' node
         mFirebaseDatabase = mFirebaseInstance.getReference("users");
         // store app title to 'app_title' node
-        mFirebaseInstance.getReference("soloWater").setValue("Realtime Database");
+        mFirebaseInstance.getReference("soloWater").setValue("Real time Database");
 
+        if (mAuth.getCurrentUser() != null) {
             userId = mAuth.getCurrentUser().getUid();
+        }
             //userId = mFirebaseDatabase.push().getKey();
 
         User mUser = new User(firstName, lastName, accountType, email, password);

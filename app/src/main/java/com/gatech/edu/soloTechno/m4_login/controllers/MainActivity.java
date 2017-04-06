@@ -12,10 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,18 +40,16 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
-
+@SuppressWarnings("FieldCanBeLocal")
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, GoogleMap.InfoWindowAdapter {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     /**
      * Declare Firebase Authentication.
      */
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth mAuth;
 
-    public static GoogleMap mMap;
+    private static GoogleMap mMap;
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
@@ -78,10 +74,12 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
-        drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -91,8 +89,8 @@ public class MainActivity extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-       toggle.setDrawerIndicatorEnabled(true);
-        drawer.setDrawerListener(toggle);
+        toggle.setDrawerIndicatorEnabled(true);
+        drawer.addDrawerListener(toggle);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance().getReference("users");
 
@@ -101,29 +99,31 @@ public class MainActivity extends AppCompatActivity
          */
         mAuth = FirebaseAuth.getInstance();
 
-        View header=navigationView.getHeaderView(0);
+        View header = navigationView.getHeaderView(0);
         final ImageView image_filed = (ImageView) header.findViewById(R.id.imageField);
-        final TextView user_field = (TextView)header.findViewById(R.id.userField);
+        final TextView user_field = (TextView) header.findViewById(R.id.userField);
         final TextView email_filed = (TextView) header.findViewById(R.id.emailField);
-        mFirebaseDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        if (mAuth.getCurrentUser() != null) {
+            mFirebaseDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
 
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                getSupportActionBar().setTitle("Welcome, " + user.firstName + "!");
-                image_filed.setImageResource(R.drawable.solotech2);
-                user_field.setText(user.firstName + " " + user.lastName);
-                email_filed.setText(user.email);
-                accountType = user.accountType;
-            }
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    getSupportActionBar().setTitle("Welcome, " + user.firstName + "!");
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    user_field.setText(user.firstName + " " + user.lastName);
+                    email_filed.setText(user.email);
+                    accountType = user.accountType;
+                }
 
-            }
-        });
-        //accountType = accountType == null ? "User" : accountType;
-        initMap();
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            //accountType = accountType == null ? "User" : accountType;
+            initMap();
+        }
     }
 
 
@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity
             ref.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
+                    @SuppressWarnings("unchecked")
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
                         collectLatitudeLongitude((Map<String,Object>) dataSnapshot.getValue());
@@ -175,6 +176,7 @@ public class MainActivity extends AppCompatActivity
         ref2.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
+                    @SuppressWarnings("unchecked")
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Get map of users in datasnapshot
                         addPurityReportData((Map<String,Object>) dataSnapshot.getValue());
@@ -206,17 +208,17 @@ public class MainActivity extends AppCompatActivity
             MainActivity.mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)))
                     .title(
-                            ((String) singleUser.get("locationName"))
+                            (singleUser.get("locationName"))
                                     + " submitted by "
-                                    + ((String) singleUser.get("name"))
+                                    + (singleUser.get("name"))
 
                     )
                     .snippet(
-                            ((String) singleUser.get("waterType"))
+                            (singleUser.get("waterType"))
                                     + " type with condition "
-                                    + ((String) singleUser.get("waterCondition"))
+                                    + (singleUser.get("waterCondition"))
                                     + ". Report number: "
-                                    + ((String) singleUser.get("waterReportNumber"))
+                                    + (singleUser.get("waterReportNumber"))
                     )
 
             );
@@ -244,15 +246,15 @@ public class MainActivity extends AppCompatActivity
             MainActivity.mMap.addMarker(new MarkerOptions()
                     .position(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)))
                     .title(
-                            ((String) singleReport.get("locationName"))
+                            singleReport.get("locationName")
                                     + " submitted by "
-                                    + ((String) singleReport.get("name"))
+                                    + singleReport.get("name")
 
                     )
                     .snippet(
-                            ((String) singleReport.get("waterCondition"))
+                            singleReport.get("waterCondition")
                                     + ". Report number: "
-                                    + ((String) singleReport.get("waterReportNumber"))
+                                    + singleReport.get("waterReportNumber")
                     )
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
@@ -293,14 +295,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_logout) {
             /**
-             * Uses firebase built-in signout method to sign out users of their current session
+             * Uses firebase built-in sign out method to sign out users of their current session
              */
             FirebaseAuth.getInstance().signOut();
 

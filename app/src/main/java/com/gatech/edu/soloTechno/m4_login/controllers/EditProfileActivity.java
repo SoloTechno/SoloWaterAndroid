@@ -4,12 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +18,6 @@ import com.gatech.edu.soloTechno.m4_login.R;
 import com.gatech.edu.soloTechno.m4_login.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -36,13 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.Random;
 
-/**
- * Created by timothybaba on 3/6/17.
- */
-
-
+@SuppressWarnings("FieldCanBeLocal")
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final String TAG = EditProfileActivity.class.getSimpleName();
@@ -72,7 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private DatabaseReference mFirebaseDatabase;
     //private FirebaseDatabase mFirebaseInstance;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    public static List<String> accounts = Arrays.asList("Manager", "Worker", "Admin", "User");
+    private static final List<String> accounts = Arrays.asList("Manager", "Worker", "Admin", "User");
 
 
     @Override
@@ -95,23 +84,24 @@ public class EditProfileActivity extends AppCompatActivity {
         //firstName_text.setText(mAuth.getCurrentUser().getDisplayName());
        // email_text.setText(mAuth.getCurrentUser().getEmail());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, accounts);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, accounts);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         accountTypeSpinner.setAdapter(adapter);
 
 
         //Auto fills the edit profile page with user's info
-        mFirebaseDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
+        if (mAuth.getCurrentUser() != null) {
+            mFirebaseDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
                     firstName_text.setText(user.firstName);
                     lastName_text.setText(user.lastName);
                     email_text.setText(user.email);
                     password_text.setText(user.password);
                     confirmPassword_text.setText(user.password);
-                Random rand = new Random();
-                accountTypeSpinner.setSelection(rand.nextInt(4));
+                    Random rand = new Random();
+                    accountTypeSpinner.setSelection(rand.nextInt(4));
               /*  switch (user.getAccountType()) {
                     case "Manager": accountTypeSpinner.setSelection(1);
                         break;
@@ -119,13 +109,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 }*/
 
 
-            }
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "Failed to read value.");
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.w(TAG, "Failed to read value.");
+                }
+            });
+        }
 
        // firstName_text.setText(mAuth.getCurrentUser().getDisplayName());
        // email_text.setText(mAuth.getCurrentUser().getEmail());
@@ -230,8 +221,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
 
-                        } else {
-                            // User is signed out
                         }
                     }
 
@@ -273,7 +262,7 @@ public class EditProfileActivity extends AppCompatActivity {
             email_text.setError("Please enter a valid email address");
             return false;
         }
-        return isGoodEmail;
+        return true;
     }
 
     /**
@@ -296,7 +285,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Confirms that an entered password is atleast 6 characters long, and ensures the password and
+     * Confirms that an entered password is at least 6 characters long, and ensures the password and
      * the password confirmation fields match. if not the case, it displays an error  int the
      * password_text
      * @param password password entered in the password field

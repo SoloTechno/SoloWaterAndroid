@@ -17,14 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
 
-
-/**
- * Created by shong313 on 4/3/17.
- */
-
+@SuppressWarnings("FieldCanBeLocal")
 public class HistoricalReportActivity extends FragmentActivity {
     private Button submitButton;
     private Spinner yearSpinner;
@@ -34,10 +28,10 @@ public class HistoricalReportActivity extends FragmentActivity {
     static String data2;
     static String data3;
     //static ArrayList locations = new ArrayList();
-    static ArrayList years = new ArrayList();
-    static ArrayList virus = new ArrayList();
-    static ArrayList contaminants = new ArrayList();
-    private ArrayList<String> options = new ArrayList<>(Arrays.asList("select", "Year", "Virus", "Contaminants"));
+    static final ArrayList<String> years = new ArrayList<>();
+    static final ArrayList<String> virus = new ArrayList<>();
+    static final ArrayList<String> contaminants = new ArrayList<>();
+    private final ArrayList<String> options = new ArrayList<>(Arrays.asList("select", "Year", "Virus", "Contaminants"));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +48,7 @@ public class HistoricalReportActivity extends FragmentActivity {
         ppmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ppmSpinner.setAdapter(ppmAdapter);*/
 
-        ArrayAdapter<String> ppmAdapter = new ArrayAdapter<String>(HistoricalReportActivity.this, android.R.layout.simple_spinner_item, options);
+        ArrayAdapter<String> ppmAdapter = new ArrayAdapter<>(HistoricalReportActivity.this, android.R.layout.simple_spinner_item, options);
         ppmAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ppmSpinner.setAdapter(ppmAdapter);
 
@@ -92,7 +86,7 @@ public class HistoricalReportActivity extends FragmentActivity {
                 locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 locationSpinner.setAdapter(locationAdapter);
 
-                ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(HistoricalReportActivity.this, android.R.layout.simple_spinner_item, options);
+                ArrayAdapter<String> yearAdapter = new ArrayAdapter<>(HistoricalReportActivity.this, android.R.layout.simple_spinner_item, options);
                 locationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 yearSpinner.setAdapter(yearAdapter);
 
@@ -106,9 +100,9 @@ public class HistoricalReportActivity extends FragmentActivity {
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                data1 = ppmSpinner.getSelectedItem().toString().trim() == "select"? null: ppmSpinner.getSelectedItem().toString().trim();
-                data2 = locationSpinner.getSelectedItem().toString().trim() == "select"? null: locationSpinner.getSelectedItem().toString().trim();
-                data3 = yearSpinner.getSelectedItem().toString().trim() == "select"? null: yearSpinner.getSelectedItem().toString().trim();
+                data1 = ppmSpinner.getSelectedItem().toString().trim().equals("select") ? null : ppmSpinner.getSelectedItem().toString().trim();
+                data2 = locationSpinner.getSelectedItem().toString().trim().equals("select") ? null : locationSpinner.getSelectedItem().toString().trim();
+                data3 = yearSpinner.getSelectedItem().toString().trim().equals("select") ? null : yearSpinner.getSelectedItem().toString().trim();
 
 
 

@@ -19,7 +19,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,7 +46,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -73,8 +71,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Creates an instance of Firebase authentication
      */
-    static FirebaseAuth mAuth;
-    static FirebaseAuth.AuthStateListener mAuthListener;
+    private static FirebaseAuth mAuth;
+    private static FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,37 +247,26 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         startActivity(mainActivity);*/
                         mFirebaseDatabase = FirebaseDatabase.getInstance().getReference("users");
 
-                        mFirebaseDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                User user = dataSnapshot.getValue(User.class);
+                        if (mAuth.getCurrentUser() != null) {
+                            mFirebaseDatabase.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    User user = dataSnapshot.getValue(User.class);
 
-                                UserProfileChangeRequest addProfileName = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(user.firstName)
-                                        .build();
+                                    UserProfileChangeRequest addProfileName = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(user.firstName)
+                                            .build();
 
-                                mAuth.getCurrentUser().updateProfile(addProfileName)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    mAuth.getCurrentUser().updateProfile(addProfileName);
+                                }
 
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    //Log.d(TAG, user.getDisplayName());
-                                                   // Log.d(TAG, "");
-                                                }
-                                            }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    // Log.w(TAG, "Failed to read value.");
+                                }
+                            });
+                        }
 
-                                        });
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                               // Log.w(TAG, "Failed to read value.");
-                            }
-                        });
-
-                    } else {
-                        // User is signed out
                     }
                 }
             };
@@ -417,7 +404,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         };
 
         int ADDRESS = 0;
-        int IS_PRIMARY = 1;
     }
 
     /**

@@ -12,14 +12,10 @@ import android.widget.TextView;
 
 import com.gatech.edu.soloTechno.m4_login.R;
 
-/**
- * Created by Joshua on 3/3/2017.
- */
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
         final Calendar c = Calendar.getInstance();

@@ -1,29 +1,19 @@
 package com.gatech.edu.soloTechno.m4_login.controllers;
 
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-
 import com.gatech.edu.soloTechno.m4_login.R;
-import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
 
-/**
- * Created by timothybaba on 4/4/17.
- */
-
+@SuppressWarnings("FieldCanBeLocal")
 public class ShowGraph extends FragmentActivity {
 
     private  LineGraphSeries<DataPoint> series;
-    GraphView graph;
+    private GraphView graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +72,7 @@ public class ShowGraph extends FragmentActivity {
         }
     }
 
-    void plot (ArrayList list1, ArrayList list2) {
+    private void plot (ArrayList list1, ArrayList list2) {
         series = new LineGraphSeries<>();
 
        int length = list1.size();
@@ -92,7 +82,7 @@ public class ShowGraph extends FragmentActivity {
         graph.addSeries(series);
     }
 
-    ArrayList determineSelection(String selected) {
+    private ArrayList determineSelection(String selected) {
         ArrayList answer = new ArrayList();
         switch (selected) {
             /*case "Location": answer = HistoricalReportActivity.locations;

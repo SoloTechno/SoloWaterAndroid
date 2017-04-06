@@ -1,8 +1,5 @@
 package com.gatech.edu.soloTechno.m4_login.model;
 
-/**
- * Created by timothybaba on 3/5/17.
- */
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
@@ -28,8 +25,5 @@ public class User {
         this.password = password;
     }
 
-    public String getAccountType() {
-        return accountType;
-    }
 }
 

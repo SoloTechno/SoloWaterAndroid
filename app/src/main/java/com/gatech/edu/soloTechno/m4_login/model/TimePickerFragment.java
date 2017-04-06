@@ -13,10 +13,6 @@ import android.widget.TimePicker;
 
 import com.gatech.edu.soloTechno.m4_login.R;
 
-/**
- * Created by Joshua on 3/3/2017.
- */
-
 public class TimePickerFragment extends DialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
@@ -43,6 +39,6 @@ public class TimePickerFragment extends DialogFragment
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         TextView tv1 = (TextView) getActivity().findViewById(R.id.pick_time_input);
-        tv1.setText(view.getCurrentHour() + " : "+view.getCurrentMinute());
+        tv1.setText(view.getHour() + " : "+view.getMinute());
     }
 }
