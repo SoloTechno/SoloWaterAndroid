@@ -236,15 +236,17 @@ public class WaterPurityReportActivity extends FragmentActivity {
     *
     * @Param v View for date picker
     * */
-    public void showDatePickerDialog() {
+    public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     /*
     * Displays time range for user input
+    *
+    * @Param v View for date picker
     * */
-    public void showTimePickerDialog() {
+    public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
