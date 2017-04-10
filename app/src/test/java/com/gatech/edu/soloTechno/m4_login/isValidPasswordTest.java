@@ -38,21 +38,19 @@ public class isValidPasswordTest {
     @Test//Failing Cases
     public void password_checker() {
 
-        System.out.println("Testing Method:isValidPassword for failing cases");
+        System.out.println("Tested Method:isValidPassword for failing cases");
 
 
         // testing the failing conditions
-        assertEquals(true,vld.isValidPassword("123") );
-        assertEquals(true, vld.isValidPassword("fgt"));
+        assertEquals(false,vld.isValidPassword("123") );
+        assertEquals(false, vld.isValidPassword("fgt"));
+        assertEquals(false, vld.isValidPassword(null));
+        assertEquals(false, vld.isValidPassword(""));
 
-    }
-
-    @Test//Passing Cases
-    public void password_checker2() {
-
-        System.out.println("Testing Method:isValidPassword for passing cases");
         // test the passing conditions
         assertEquals(true,vld.isValidPassword("123456"));
         assertEquals(true,vld.isValidPassword("asd123fgh"));
+
     }
+
 }
