@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.gatech.edu.soloTechno.m4_login.R;
 import com.gatech.edu.soloTechno.m4_login.model.User;
+import com.gatech.edu.soloTechno.m4_login.model.Validator;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -140,10 +141,26 @@ public class EditProfileActivity extends AppCompatActivity {
                 lastName = lastName_text.getText().toString().trim();
                 password = password_text.getText().toString().trim();
                 confirmPassword = confirmPassword_text.getText().toString().trim();
+                Validator validotor = new Validator();
 
-                validEmail = isValidEmail(email);
-                validFirstName = isValidName(RegisterActivity.firstName);
+
+                validEmail = validotor.isValidEmail(email);
+                if (!isValidEmail(email)) {
+                    email_text.setError("Please enter a valid email address");
+                }
+
+                validFirstName = Validator.isValidName(RegisterActivity.firstName);
+                if (!validFirstName) {
+                    if (RegisterActivity.firstName.equals(firstName_text.getText().toString().trim())) {
+                        firstName_text.setError("Please enter your name");
+                    }
+                }
+
                 validLastName = isValidName(lastName);
+                if (!validLastName) {
+                    lastName_text.setError("Please enter your name");
+                }
+
                 validPassword = isValidPassword(password, confirmPassword);
                 if (!validEmail || !validFirstName || !validLastName || !validPassword)
                     return;
