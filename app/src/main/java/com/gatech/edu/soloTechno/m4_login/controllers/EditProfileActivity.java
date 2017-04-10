@@ -141,6 +141,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                 createAuthProgressDialog();
                // mAuthProgressDialog.show();
+                Validator validotor = new Validator();
 
                 //get user's info
                 accountType = accountTypeSpinner.getSelectedItem().toString().trim();
@@ -150,9 +151,24 @@ public class EditProfileActivity extends AppCompatActivity {
                 password = password_text.getText().toString().trim();
                 confirmPassword = confirmPassword_text.getText().toString().trim();
 
-                validEmail = isValidEmail(email);
-                validFirstName = isValidName(RegisterActivity.firstName);
+                validEmail = validotor.isValidEmail(email);
+                if (!isValidEmail(email)) {
+                    email_text.setError("Please enter a valid email address");
+                }
+                validFirstName = Validator.isValidName(RegisterActivity.firstName);
+
+                if (!validFirstName) {
+                    if (RegisterActivity.firstName.equals(firstName_text.getText().toString().trim())) {
+                        firstName_text.setError("Please enter your name");
+                    }
+                }
+
                 validLastName = isValidName(lastName);
+
+                if (!validLastName) {
+                        lastName_text.setError("Please enter your name");
+                    }
+
                 validPassword = isValidPassword(password, confirmPassword);
                 if (!validEmail || !validFirstName || !validLastName || !validPassword)
                     return;
@@ -261,23 +277,31 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     /**
-     * Uses an Android pattern to check if an entered email is in the correct format. If the email
-     * is not valid, it displays an error in the email_text
+     * Internal helper method to checker weather the input string
+     * is a correct email or not. It uses regular expression pattern
+     * to match email addresses. It excludes double quoted local parts and the
+     * special characters #&~!^`{}/=$*?| that are included in RFC5321.
      * @param email email entered by a user
      * @return whether an email is valid or not
      */
-    private boolean isValidEmail(String email) {
+    public boolean isValidEmail(String email) {
+
+
         boolean isGoodEmail =
                 (email != null && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches());
+
         if (!isGoodEmail) {
-            email_text.setError("Please enter a valid email address");
             return false;
         }
+
         return isGoodEmail;
+
     }
 
     /**
-     * Ensures the name field has not been left blank. It it has, it displays an error in either
+     * Internal helper to ensure the name is valid. It checks
+     * for empty names and those containing digits. If it has any,
+     * it displays an error in either
      * the firstName_text or the lastName_text depending on which has been left blank
      * @param name name entered by a user
      * @return whether a name field is blank or not
