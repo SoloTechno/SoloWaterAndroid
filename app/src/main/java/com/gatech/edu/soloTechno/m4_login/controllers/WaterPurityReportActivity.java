@@ -1,5 +1,6 @@
 package com.gatech.edu.soloTechno.m4_login.controllers;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +19,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.gatech.edu.soloTechno.m4_login.R;
 import com.gatech.edu.soloTechno.m4_login.model.DatePickerFragment;
 import com.gatech.edu.soloTechno.m4_login.model.TimePickerFragment;
 import com.gatech.edu.soloTechno.m4_login.model.WaterPurityReportData;
@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-@SuppressWarnings("FieldCanBeLocal")
+@SuppressWarnings({"ALL", "UnusedParameters"})
 public class WaterPurityReportActivity extends FragmentActivity {
     // private field to get the location's name
     private CharSequence locationName;
@@ -62,6 +62,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
 
 
 
+    @SuppressLint({"SetTextI18n", "DefaultLocale"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -83,7 +84,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
         waterReportNumber = (EditText) findViewById(R.id.water_report_number);
         waterReportNumber.setEnabled(false);
         // random number range from 1 to 1000
-        waterReportNumber.setText(Integer.toString(rand.nextInt(1000) + 1));
+        waterReportNumber.setText(String.format("%1$d", rand.nextInt(1000) + 1));
 
         // water condition spinners
         waterConditionSpinner = (Spinner) findViewById(R.id.water_purity_condition_spinner);
@@ -236,6 +237,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
     *
     * @Param v View for date picker
     * */
+    @SuppressWarnings("UnusedParameters")
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
@@ -246,7 +248,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
     *
     * @Param v View for date picker
     * */
-    public void showTimePickerDialog(View v) {
+    public void showTimePickerDialog(@SuppressWarnings("UnusedParameters") View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
     }
@@ -258,7 +260,7 @@ public class WaterPurityReportActivity extends FragmentActivity {
     private void saveArray()
     {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor mEdit1 = sp.edit();
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor mEdit1 = sp.edit();
     /* sKey is an array */
         mEdit1.putInt("Status_size", waterPurityLogger.size());
 

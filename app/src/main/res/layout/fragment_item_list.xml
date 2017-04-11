@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--suppress AndroidDomInspection -->
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources"
     android:id="@+id/list"
     android:name="com.gatech.edu.soloTechno.m4_login.ItemFragment"
     android:layout_width="match_parent"

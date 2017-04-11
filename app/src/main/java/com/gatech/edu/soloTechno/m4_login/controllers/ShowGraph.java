@@ -2,7 +2,7 @@ package com.gatech.edu.soloTechno.m4_login.controllers;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import com.gatech.edu.soloTechno.m4_login.R;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;

@@ -12,6 +12,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.gatech.edu.soloTechno.m4_login.controllers.MainActivity"
-    tools:showIn="@layout/app_bar_main">
+    tools:showIn="@layout/app_bar_main"
+    tools:ignore="UnusedResources" >
 
 </RelativeLayout>

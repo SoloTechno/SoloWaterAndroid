@@ -1,5 +1,6 @@
 package com.gatech.edu.soloTechno.m4_login.controllers;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,9 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.gatech.edu.soloTechno.m4_login.R;
-import com.gatech.edu.soloTechno.m4_login.model.DatePickerFragment;
-import com.gatech.edu.soloTechno.m4_login.model.TimePickerFragment;
 import com.gatech.edu.soloTechno.m4_login.model.WaterSourceReportData;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -56,6 +53,7 @@ public class WaterReportActivity extends FragmentActivity {
 
 
 
+    @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -77,7 +75,7 @@ public class WaterReportActivity extends FragmentActivity {
         waterReportNumber = (EditText) findViewById(R.id.water_report_number);
         waterReportNumber.setEnabled(false);
         // random number range from 1 to 1000
-        waterReportNumber.setText(Integer.toString(rand.nextInt(1000) + 1));
+        waterReportNumber.setText(String.format("%1$d", rand.nextInt(1000) + 1));
 
         // water type & condition spinners
         waterTypeSpinner = (Spinner) findViewById(R.id.water_type_spinner);
@@ -217,18 +215,18 @@ public class WaterReportActivity extends FragmentActivity {
     /*
     * Displays dates range for user input
     * */
-    public void showDatePickerDialog() {
-        DialogFragment newFragment = new DatePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-    }
+//    public void showDatePickerDialog() {
+//        DialogFragment newFragment = new DatePickerFragment();
+//        newFragment.show(getSupportFragmentManager(), "datePicker");
+//    }
 
     /*
     * Displays f range for user input
     * */
-    public void showTimePickerDialog() {
-        DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getSupportFragmentManager(), "timePicker");
-    }
+//    public void showTimePickerDialog() {
+//        DialogFragment newFragment = new TimePickerFragment();
+//        newFragment.show(getSupportFragmentManager(), "timePicker");
+//    }
 
     /**
      * Hack to save the array in app
@@ -237,7 +235,7 @@ public class WaterReportActivity extends FragmentActivity {
     private void saveArray()
     {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor mEdit1 = sp.edit();
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor mEdit1 = sp.edit();
     /* sKey is an array */
         mEdit1.putInt("Status_size", waterLogger.size());
 

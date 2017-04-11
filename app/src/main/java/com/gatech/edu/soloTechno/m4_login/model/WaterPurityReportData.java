@@ -5,16 +5,16 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class WaterPurityReportData {
 
-    private String waterReportNumber;
-    private String name;
-    private String locationName;
-    private String latitude;
-    private String longitude;
-    private String waterCondition;
-    private String virusPPM;
-    private String contaminantPPM;
-    private String year;
-    private String month;
+    private final String waterReportNumber;
+    private final String name;
+    private final String locationName;
+    private final String latitude;
+    private final String longitude;
+    private final String waterCondition;
+    private final String virusPPM;
+    private final String contaminantPPM;
+    private final String year;
+    private final String month;
 
 
     public WaterPurityReportData (String waterReportNumber, String name, String locationName, String latitude,
