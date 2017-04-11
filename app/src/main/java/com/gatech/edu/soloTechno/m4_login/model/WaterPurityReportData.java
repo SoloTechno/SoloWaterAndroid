@@ -37,7 +37,6 @@ public class WaterPurityReportData {
      */
     public String getReport(){
         String list;
-
         if(waterReportNumber != null) {
             list = "Water Report Number : " + waterReportNumber
                     + "\nName : " + name
