@@ -3,6 +3,8 @@ package com.gatech.edu.soloTechno.m4_login.model;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import java.util.Calendar;
+import java.util.Date;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -38,5 +40,26 @@ public class DatePickerFragment extends DialogFragment
     public void onDateSet(DatePicker view, int year, int month, int day) {
         TextView tv1 = (TextView) getActivity().findViewById(R.id.pick_date_input);
         tv1.setText(view.getMonth() + 1 + "/" + view.getDayOfMonth() + "/" + view.getYear());
+    }
+
+    /**
+     * If the year, month, or day is not valid, it return boolean
+     * @params year int value of year
+     * @params month int value of month
+     * @params day int value of day
+     * @return whether the date is valid or not
+     */
+    public boolean isValidDate(int year, int month, int day) {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int today_year = cal.get(Calendar.YEAR);
+        int today_month = cal.get(Calendar.MONTH);
+        int today_day = cal.get(Calendar.DAY_OF_MONTH);
+
+        if (year > today_year || year == 0 || day == 0 || month ==0) {
+            return false;
+        }
+        return true;
     }
 }
